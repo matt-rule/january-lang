@@ -26,16 +26,26 @@ let parse (tokens: LexicalToken list) : CodeBlock =
     and parseTerm tokens =
         match tokens with
         | (Sep LeftParen) :: rest ->
-            let (innerExpr, afterInner) = parseExpr rest
-            (match afterInner with
-             | (Sep RightParen) :: tail -> (innerExpr, tail)
-             | _ -> failwith "Expected right parenthesis")
+            let (firstExpr, afterFirst) = parseExpr rest
+            (match afterFirst with
+            | (Sep SepComma) :: afterComma ->  (* Check for comma *)
+                let (secondExpr, afterSecond) = parseExpr afterComma
+                (match afterSecond with
+                | (Sep RightParen) :: tail -> (TupleValue(firstExpr, secondExpr), tail) (* Return tuple value *)
+                | _ -> failwith "Expected right parenthesis after tuple value")
+            | (Sep RightParen) :: tail -> (firstExpr, tail) (* This is a regular parenthesis, not a tuple *)
+            | _ -> failwith "Expected comma or right parenthesis")
         | (LexLiteral value) :: rest -> (Literal value, rest)
         | _ -> failwith "Expected term"
 
     let parseBinding tokens =
         match tokens with
-        | (LexKeyword Let) :: (LexIdentifier name) :: (Op OpColon) :: (LexKeyword IntType) :: (Op OpBinding) :: rest ->
+        | (LexKeyword Let) :: (LexIdentifier name) :: (Sep SepColon) :: (LexKeyword IntType) :: (Op OpAsterisk) :: (LexKeyword IntType) :: (Op OpBinding) :: rest ->
+            let (expr, remaining) = parseExpr rest
+            (match remaining with
+            | Newline :: tail -> ({name = name; dataType = Tuple; value = expr}, tail)
+            | _ -> failwith "Expected newline after binding")
+        | (LexKeyword Let) :: (LexIdentifier name) :: (Sep SepColon) :: (LexKeyword IntType) :: (Op OpBinding) :: rest ->
             let (expr, remaining) = parseExpr rest
             (match remaining with
             | Newline :: tail -> ({name = name; dataType = Integer; value = expr}, tail)

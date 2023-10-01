@@ -14,12 +14,12 @@ let lex input =
             | '+' -> aux s (i+1) (Op OpAdd :: acc)
             | '-' -> aux s (i+1) (Op OpSubtract :: acc)
             | '=' -> aux s (i+1) (Op OpBinding :: acc)
-            | ':' -> aux s (i+1) (Op OpColon :: acc)
-            // | ',' -> aux s (i+1) (Op OpComma :: acc)
-            // | '*' -> aux s (i+1) (Op OpAsterisk :: acc)
+            | ':' -> aux s (i+1) (Sep SepColon :: acc)
+            | ',' -> aux s (i+1) (Sep SepComma :: acc)
+            | '*' -> aux s (i+1) (Op OpAsterisk :: acc)
             | c when Char.IsDigit(c) ->
                 // Parse number literals that may have more than one digit
-                let endIdx, value = s.[i..].ToString().Split([|'('; ')'; '+'; '-'; '='; '\n'|], 2) |> fun arr -> (i + arr.[0].Length, int arr.[0])
+                let endIdx, value = s.[i..].ToString().Split([|'('; ')'; '+'; '-'; '='; ':'; ','; '*'; '\n'|], 2) |> fun arr -> (i + arr.[0].Length, int arr.[0])
                 aux s endIdx (LexLiteral value :: acc)
             | 'l' when s.Length - i >= 3 && s.Substring(i, 3) = "let" ->  // Check for "let" keyword
                 aux s (i+3) (LexKeyword Let :: acc) 
@@ -27,7 +27,7 @@ let lex input =
                 aux s (i+3) (LexKeyword IntType :: acc)
             | c when Char.IsLetter(c) ->
                 // Parse identifier
-                let endIdx, ident = s.[i..].ToString().Split([|'('; ')'; '+'; '-'; '='; ' '; '\n'|], 2) |> fun arr -> (i + arr.[0].Length, arr.[0])
+                let endIdx, ident = s.[i..].ToString().Split([|'('; ')'; '+'; '-'; '='; ':'; ','; '*'; ' '; '\n'|], 2) |> fun arr -> (i + arr.[0].Length, arr.[0])
                 aux s endIdx (LexIdentifier ident :: acc)
             | '\n' -> aux s (i+1) (Newline :: acc)  // Added support for newline
             | _ -> aux s (i+1) acc  // Skip other characters
