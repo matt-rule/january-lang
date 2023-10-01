@@ -9,9 +9,10 @@
   <ItemGroup>
     <Compile Include="SymbolName.fs" />
     <Compile Include="LexicalToken.fs" />
-    <Compile Include="LexicalTokenisation.fs" />
+    <Compile Include="Lexing.fs" />
     <Compile Include="Expression.fs" />
     <Compile Include="Parsing.fs" />
+    <Compile Include="Evaluation.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 

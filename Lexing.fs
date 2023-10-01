@@ -20,6 +20,8 @@ let lex input =
                 aux s endIdx (LexLiteral value :: acc)
             | 'l' when s.Length - i >= 3 && s.Substring(i, 3) = "let" ->  // Check for "let" keyword
                 aux s (i+3) (LexKeyword Let :: acc) 
+            | ':' when s.Length - i >= 5 && s.Substring(i+1, 4) = " int" ->  // Check for ": int" type specification
+                aux s (i+5) (LexKeyword IntType :: acc)
             | c when Char.IsLetter(c) ->
                 // Parse identifier
                 let endIdx, ident = s.[i..].ToString().Split([|'('; ')'; '+'; '-'; '='; ' '; '\n'|], 2) |> fun arr -> (i + arr.[0].Length, arr.[0])

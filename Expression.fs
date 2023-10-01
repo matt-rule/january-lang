@@ -9,8 +9,13 @@ type Expr =
     | BinOpExpr of BinOp * Expr * Expr
     | Identifier of string
 
+type DataType =
+    | Integer
+    | Unspecified
+
 type BindingStatement = {
     name: string;
+    dataType: DataType;
     value: Expr;
 }
 

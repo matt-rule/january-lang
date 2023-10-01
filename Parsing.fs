@@ -38,7 +38,7 @@ let parse (tokens: LexicalToken list) : CodeBlock =
         | (LexKeyword Let) :: (LexIdentifier name) :: (Op OpBinding) :: rest ->
             let (expr, remaining) = parseExpr rest
             (match remaining with
-            | Newline :: tail -> ({name = name; value = expr}, tail)
+            | Newline :: tail -> ({name = name; dataType = Integer; value = expr}, tail)
             | _ -> failwith "Expected newline after binding")
         | _ -> failwith "Expected binding statement"
 
