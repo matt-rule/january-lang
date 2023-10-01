@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net7.0</TargetFramework>
+    <RootNamespace>january_lang</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="SymbolName.fs" />
+    <Compile Include="LexicalToken.fs" />
+    <Compile Include="LexicalTokenisation.fs" />
+    <Compile Include="Expression.fs" />
+    <Compile Include="Parsing.fs" />
+    <Compile Include="Program.fs" />
+  </ItemGroup>
+
+</Project>
