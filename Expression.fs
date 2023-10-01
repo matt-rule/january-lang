@@ -15,8 +15,12 @@ type DataType =
     | Tuple
     | Unspecified
 
+type BindingPattern = 
+    | SingleBind of string              // variable name
+    | TupleBind of string * string      // (x, y) =
+
 type BindingStatement = {
-    name: string;
+    pattern: BindingPattern;               // variable name or LHS of tuple deconstruction
     dataType: DataType;
     value: Expr;
 }

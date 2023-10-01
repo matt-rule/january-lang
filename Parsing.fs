@@ -40,20 +40,25 @@ let parse (tokens: LexicalToken list) : CodeBlock =
 
     let parseBinding tokens =
         match tokens with
+        | (LexKeyword Let) :: (Sep LeftParen) :: (LexIdentifier x) :: (Sep SepComma) :: (LexIdentifier y) :: (Sep RightParen) :: (Op OpBinding) :: rest ->
+            let (expr, remaining) = parseExpr rest
+            (match remaining with
+            | Newline :: tail -> ({pattern = TupleBind(x, y); dataType = Tuple; value = expr}, tail)
+            | _ -> failwith "Expected newline after binding")
         | (LexKeyword Let) :: (LexIdentifier name) :: (Sep SepColon) :: (LexKeyword IntType) :: (Op OpAsterisk) :: (LexKeyword IntType) :: (Op OpBinding) :: rest ->
             let (expr, remaining) = parseExpr rest
             (match remaining with
-            | Newline :: tail -> ({name = name; dataType = Tuple; value = expr}, tail)
+            | Newline :: tail -> ({pattern = SingleBind(name); dataType = Tuple; value = expr}, tail)
             | _ -> failwith "Expected newline after binding")
         | (LexKeyword Let) :: (LexIdentifier name) :: (Sep SepColon) :: (LexKeyword IntType) :: (Op OpBinding) :: rest ->
             let (expr, remaining) = parseExpr rest
             (match remaining with
-            | Newline :: tail -> ({name = name; dataType = Integer; value = expr}, tail)
+            | Newline :: tail -> ({pattern = SingleBind(name); dataType = Integer; value = expr}, tail)
             | _ -> failwith "Expected newline after binding")
         | (LexKeyword Let) :: (LexIdentifier name) :: (Op OpBinding) :: rest ->
             let (expr, remaining) = parseExpr rest
             (match remaining with
-            | Newline :: tail -> ({name = name; dataType = Integer; value = expr}, tail)
+            | Newline :: tail -> ({pattern = SingleBind(name); dataType = Integer; value = expr}, tail)
             | _ -> failwith "Expected newline after binding")
         | _ -> failwith "Expected binding statement"
 

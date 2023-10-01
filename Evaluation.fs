@@ -49,8 +49,14 @@ let evalCodeBlock (codeBlock: CodeBlock) =
         match statements with
         | [] -> env
         | statement :: rest ->
-            let newEnvValue = eval env statement.value
-            let newEnv = Map.add statement.name newEnvValue env
+            let rhsValue = eval env statement.value
+            let newEnv = 
+                match statement.pattern, rhsValue with
+                | SingleBind name, _ -> 
+                    Map.add name rhsValue env
+                | TupleBind (name1, name2), DataTuple (val1, val2) -> 
+                    Map.add name1 (DataInteger val1) (Map.add name2 (DataInteger val2) env)
+                | _, _ -> failwith "Mismatch between binding pattern and value type."
             evalStatements newEnv rest
 
     let finalEnv = evalStatements Map.empty statements
