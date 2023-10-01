@@ -1,7 +1,7 @@
 module LexicalToken
 
 type Separator = LeftParen | RightParen
-type Operator = OpAdd | OpSubtract | OpBinding | OpColon
+type Operator = OpAdd | OpSubtract | OpBinding | OpColon// | OpComma | OpAsterisk
 type Keyword = Let | IntType
 
 type LexicalToken =

@@ -8,9 +8,11 @@ type Expr =
     | Literal of int
     | BinOpExpr of BinOp * Expr * Expr
     | Identifier of string
+    //| TupleValue of int * int
 
 type DataType =
     | Integer
+    //| Tuple
     | Unspecified
 
 type BindingStatement = {

@@ -35,7 +35,7 @@ let parse (tokens: LexicalToken list) : CodeBlock =
 
     let parseBinding tokens =
         match tokens with
-        | (LexKeyword Let) :: (LexIdentifier name) :: (LexKeyword IntType) :: (Op OpBinding) :: rest ->
+        | (LexKeyword Let) :: (LexIdentifier name) :: (Op OpColon) :: (LexKeyword IntType) :: (Op OpBinding) :: rest ->
             let (expr, remaining) = parseExpr rest
             (match remaining with
             | Newline :: tail -> ({name = name; dataType = Integer; value = expr}, tail)
